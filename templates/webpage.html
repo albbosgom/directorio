@@ -1,0 +1,44 @@
+{% extends 'base.html' %} 
+{% comment %} Aqui van comentarios {% endcomment %} 
+{% block pagetitle %} Inicio {% endblock %} 
+{% block pageheader %}
+<h1>Todas las webs</h1> {% endblock %} 
+{% block pagebody %} 
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Vista previa</th>
+        <th>Título</th>
+        <th>Enlace</th>
+      </tr>
+    </thead>
+    <tbody>
+{% for elemento in list %}
+{% load returnitem %}
+<tr>      
+<td><img alt="Embedded Image" src="data:image/png;base64,{{capturas|returnitem:forloop.counter}}" width="200	" /></td>
+<td><strong>{{elemento.titulo}}</strong></td>
+<td><a href="{{elemento.enlace}}">{{elemento.enlace}}</a></td>
+</tr>
+{% endfor %}
+</table>
+
+
+<div class="pagination">
+    <span class="step-links">
+        {% if list.has_previous %}
+            <a href="?page={{ list.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ list.number }} of {{ list.paginator.num_pages }}.
+        </span>
+
+        {% if list.has_next %}
+            <a href="?page={{ list.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %} 
