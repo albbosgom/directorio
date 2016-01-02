@@ -17,7 +17,7 @@
 {% for elemento in list %}
 {% load returnitem %}
 <tr>      
-<td><img alt="Embedded Image" src="data:image/png;base64,{{capturas|returnitem:forloop.counter}}" width="200	" /></td>
+<td><div class="crop"><img alt="Embedded Image" src="data:image/png;base64,{{capturas|returnitem:forloop.counter}}" width="200" /></div></td>
 <td><strong>{{elemento.titulo}}</strong></td>
 <td><a href="{{elemento.enlace}}">{{elemento.enlace}}</a></td>
 </tr>

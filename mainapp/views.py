@@ -25,10 +25,8 @@ def allPages(request):
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
         webpages = paginator.page(paginator.num_pages)
-    print RUTA_PROYECTO
     browser = webdriver.PhantomJS(executable_path=RUTA_PROYECTO+'\phantomjs.exe')
-    augmenter = 
-    browser.set_window_size(1280, 720)
+    browser.set_window_size(800, 600)
     capturas = []
     for webpage in webpages:
         browser.get(webpage.enlace)
