@@ -9,7 +9,7 @@ urlpatterns = patterns('',
     url(r'^$', 'mainapp.views.home', name='home'),
     url(r'^directorio/$', 'mainapp.views.allPages', name='directorio'),
     url(r'^directorio/nuevo/$', 'mainapp.views.nuevaWeb', name='nuevaWeb'),
-    
+    url(r'^tags_input/', include('tags_input.urls', namespace='tags_input')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

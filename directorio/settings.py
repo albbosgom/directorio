@@ -119,6 +119,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'tags_input',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -160,3 +161,19 @@ LOGGING = {
         },
     }
 }
+
+
+def get_queryset(*args, **kwargs):
+    from mainapp import models
+    return models.Webpage.objects.all()
+
+TAGS_INPUT_MAPPINGS = {
+    'mainapp.Categoria': {
+        'field': 'nombre', 'create_missing': True
+    },
+    'mainapp.Webpage': 
+    {'field': 'titulo', 'queryset': get_queryset},
+
+}
+
+TAGS_INPUT_INCLUDE_JQUERY = True
