@@ -26,7 +26,7 @@ class Categoria(ReprModel):
 
 class Webpage(ReprModel):
     titulo = models.CharField(max_length=100)
-    enlace = models.URLField(verify_exists=True)
+    enlace = models.URLField()
     categoria = models.ManyToManyField(Categoria)
     def __unicode__(self):
         return self.titulo

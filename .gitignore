@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 
+# Backups and other kinds of garbage
+*~
+.settings/
+
 # C extensions
 *.so
 
