@@ -1,0 +1,45 @@
+{% extends 'base.html' %} 
+{% comment %} Aqui van comentarios {% endcomment %} 
+{% block pagetitle %} Votando etiquetas - {{webpage.titulo}} {% endblock %} 
+{% block pageheader %}
+<h1>Votando etiquetas - {{webpage.titulo}}</h1> {% endblock %} 
+{% block pagebody %}
+{% load access %}
+
+<table class="table table-striped">
+<thead>
+<tr>
+	<th>Nombre</th>
+	<th>Voto</th>
+</tr>
+</thead>
+<tbody>
+{% for elemento in list %}
+<tr>
+	<td>{{elemento.categoria.nombre}} <span class="badge">{{elemento.puntuacion}}</span></td>
+	<td>
+		{% with elemento.categoria.pk as catpk %}
+		{% with votes|access:catpk as vote %}
+			{% if vote == None %}
+				<div class="btn-group" role="group">
+					<a href="/directorio/{{pk}}/etiquetas/{{catpk}}/yes" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-thumbs-up"></span> Apropiada</a>
+					<a href="/directorio/{{pk}}/etiquetas/{{catpk}}/no" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-thumbs-down"></span> Inapropiada</a>
+				</div>
+			{% else %}
+				{% if vote > 0 %}
+					<span class="label label-success">Apropiada</span>
+				{% else %}
+					<span class="label label-danger">Inapropiada</span>
+				{% endif %}
+				<a href="/directorio/{{pk}}/etiquetas/{{catpk}}/del" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-remove"></span> Borrar voto</a>
+			{% endif %}
+		{% endwith %}
+		{% endwith %}
+	</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+
+{% endblock %}

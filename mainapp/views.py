@@ -84,3 +84,36 @@ def verWeb(request, webpage_id):
     browser.quit()
     return my_render(request, 'webpageview.html', webpage=webpage, captura=captura, categolist=categolist, pk=webpage_id)
 
+@login_required
+def tagVote_List(request, webpage_id):
+    webpage = get_object_or_404(Webpage, pk=webpage_id)
+    taglist = WebpageCategoria.objects.filter(webpage=webpage).order_by('-puntuacion')
+    votes = WebpageCategoriaPuntuacion.objects.filter(webpage=webpage,usuario=request.user)
+    themap = {}
+    for vote in votes:
+        themap[vote.categoria.pk] = vote.puntuacion
+    return my_render(request, 'tagvote.html', webpage=webpage, list=taglist, votes=themap, pk=webpage_id)
+
+@login_required
+def tagVote_VoteYes(request, webpage_id, categoria_id):
+    webpage = get_object_or_404(Webpage, pk=webpage_id)
+    categoria = get_object_or_404(Categoria, pk=categoria_id)
+    o = WebpageCategoriaPuntuacion.objects.create(webpage=webpage, categoria=categoria, usuario=request.user, puntuacion=+1)
+    o.save()
+    return HttpResponseRedirect('/directorio/%s/etiquetas/' % (webpage_id,))
+
+@login_required
+def tagVote_VoteNo(request, webpage_id, categoria_id):
+    webpage = get_object_or_404(Webpage, pk=webpage_id)
+    categoria = get_object_or_404(Categoria, pk=categoria_id)
+    o = WebpageCategoriaPuntuacion.objects.create(webpage=webpage, categoria=categoria, usuario=request.user, puntuacion=-1)
+    o.save()
+    return HttpResponseRedirect('/directorio/%s/etiquetas/' % (webpage_id,))
+
+@login_required
+def tagVote_VoteDel(request, webpage_id, categoria_id):
+    webpage = get_object_or_404(Webpage, pk=webpage_id)
+    categoria = get_object_or_404(Categoria, pk=categoria_id)
+    o = WebpageCategoriaPuntuacion.objects.get(webpage=webpage, categoria=categoria, usuario=request.user)
+    o.delete()
+    return HttpResponseRedirect('/directorio/%s/etiquetas/' % (webpage_id,))
