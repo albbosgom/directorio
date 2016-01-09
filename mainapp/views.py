@@ -18,7 +18,7 @@ def allPages(request):
     paginator = Paginator(webpage_list, 2)
     page = request.GET.get('page')
     try:
-        webpages = paginator.page(page)        
+        webpages = paginator.page(page)
     except PageNotAnInteger:
         # If page is not an integer, deliver first page.
         webpages = paginator.page(1)
@@ -30,7 +30,7 @@ def allPages(request):
     capturas = []
     for webpage in webpages:
         browser.get(webpage.enlace)
-        capturas.append((browser.get_screenshot_as_base64()))  
+        capturas.append((browser.get_screenshot_as_base64()))
     browser.quit()    
     return render_to_response('webpage.html', {'list':webpages, 'capturas':capturas})
 
