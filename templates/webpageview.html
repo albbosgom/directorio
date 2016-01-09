@@ -1,0 +1,20 @@
+{% extends 'base.html' %} 
+{% comment %} Aqui van comentarios {% endcomment %} 
+{% block pagetitle %} {{webpage.titulo}} {% endblock %} 
+{% block pageheader %}
+<h1>{{webpage.titulo}}</h1> {% endblock %} 
+{% block pagebody %} 
+
+<p><a href="{{webpage.enlace}}">{{webpage.titulo}}</a></p>
+<p>Etiquetas:
+{% for elemento in categolist %}
+<span class="label label-success">{{elemento.categoria.nombre}} <span class="badge">{{elemento.puntuacion}}</span></span>
+{% endfor %}
+{% if user.is_authenticated %}
+<a class="btn btn-xs btn-primary" role="button" href="/directorio/{{pk}}/etiquetas"><span class="glyphicon glyphicon-hand-up"></span> Votar</a>
+{% endif %}
+</p>
+<p><img alt="Embedded Image" src="data:image/png;base64,{{captura}}" /></p>
+</p>
+
+{% endblock %}

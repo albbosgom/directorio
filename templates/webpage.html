@@ -8,17 +8,15 @@
 <table class="table table-striped">
     <thead>
       <tr>
-        <th>Vista previa</th>
-        <th>Título</th>
+        <th>T&iacute;tulo</th>
         <th>Enlace</th>
       </tr>
     </thead>
     <tbody>
 {% for elemento in list %}
 {% load returnitem %}
-<tr>      
-<td><div class="crop"><img alt="Embedded Image" src="data:image/png;base64,{{capturas|returnitem:forloop.counter}}" width="200" /></div></td>
-<td><strong>{{elemento.titulo}}</strong></td>
+<tr>
+<td><a href="/directorio/{{elemento.pk}}/"><strong>{{elemento.titulo}}</strong></a></td>
 <td><a href="{{elemento.enlace}}">{{elemento.enlace}}</a></td>
 </tr>
 {% endfor %}

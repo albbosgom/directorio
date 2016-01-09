@@ -1,6 +1,6 @@
 # Create your views here.
-from django.shortcuts import render_to_response
-from mainapp.models import Webpage
+from django.shortcuts import render_to_response, get_object_or_404
+from mainapp.models import Webpage, WebpageCategoria, WebpageCategoriaPuntuacion, Categoria
 from mainapp.forms import WebForm
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
@@ -62,13 +62,6 @@ def allPages(request):
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
         webpages = paginator.page(paginator.num_pages)
-    browser = webdriver.PhantomJS(executable_path=RUTA_PROYECTO+'\phantomjs.exe')
-    browser.set_window_size(800, 600)
-    capturas = []
-    for webpage in webpages:
-        browser.get(webpage.enlace)
-        capturas.append((browser.get_screenshot_as_base64()))
-    browser.quit()    
     return my_render(request, 'webpage.html', list=webpages)
 
 def nuevaWeb(request):
@@ -80,3 +73,14 @@ def nuevaWeb(request):
     else:
         formulario = WebForm()
     return my_render(request, 'webform.html', formulario=formulario)
+
+def verWeb(request, webpage_id):
+    webpage = get_object_or_404(Webpage, pk=webpage_id)
+    categolist = Paginator(WebpageCategoria.objects.filter(webpage=webpage, puntuacion__gt=0).order_by('-puntuacion'), 5).page(1)
+    browser = webdriver.PhantomJS(executable_path=RUTA_PROYECTO+'\phantomjs.exe')
+    browser.set_window_size(800, 600)
+    browser.get(webpage.enlace)
+    captura = browser.get_screenshot_as_base64()
+    browser.quit()
+    return my_render(request, 'webpageview.html', webpage=webpage, captura=captura, categolist=categolist, pk=webpage_id)
+

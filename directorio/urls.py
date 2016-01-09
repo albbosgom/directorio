@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     url(r'^$', 'mainapp.views.home', name='home'),
     url(r'^directorio/$', 'mainapp.views.allPages', name='directorio'),
     url(r'^directorio/nuevo/$', 'mainapp.views.nuevaWeb', name='nuevaWeb'),
+    url(r'^directorio/(?P<webpage_id>\d+)/$', 'mainapp.views.verWeb', name='verWeb'),
     url(r'^tags_input/', include('tags_input.urls', namespace='tags_input')),
     
     url(r'^login/$', 'mainapp.views.appLogin'),
