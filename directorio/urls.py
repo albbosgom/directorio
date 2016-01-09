@@ -10,6 +10,10 @@ urlpatterns = patterns('',
     url(r'^directorio/$', 'mainapp.views.allPages', name='directorio'),
     url(r'^directorio/nuevo/$', 'mainapp.views.nuevaWeb', name='nuevaWeb'),
     url(r'^tags_input/', include('tags_input.urls', namespace='tags_input')),
+    
+    url(r'^login/$', 'mainapp.views.appLogin'),
+    url(r'^logout/$', 'mainapp.views.appLogout'),
+    url(r'^registro/$', 'mainapp.views.appRegistro'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

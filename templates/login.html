@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block pagetitle %} Entrar en el sistema {% endblock %}
+{% block pageheader %}
+	<h1>Entrar en el sistema</h1>
+{% endblock %}
+{% block pagebody %}
+	<form id='form' method='post' action=''>{% csrf_token %}
+		<table>{{form}}</table>
+		<p><input type='submit' value='Entrar' /></p>
+	</form>
+{% endblock %}

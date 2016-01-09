@@ -37,6 +37,22 @@
 					<li><a href="/directorio">Directorio</a></li>
 					<li><a href="/directorio/nuevo">Añadir al directorio</a></li>
 				</ul>
+				
+				<ul class="nav navbar-nav navbar-right">
+				{% if user.is_authenticated %}
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							<span class="glyphicon glyphicon-user"></span> {{user.username}} <span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
+						</ul>
+					</li>
+				{% else %}
+					<li><a href="/registro"><span class="glyphicon glyphicon-pencil"></span> Registrarse</a></li>
+					<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Entrar</a></li>
+				{% endif %}
+				</ul>
 			</div>
 		</div>
 	</nav>

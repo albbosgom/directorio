@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block pagetitle %} Registro {% endblock %}
+{% block pageheader %}
+	<h1>Registro</h1>
+{% endblock %}
+{% block pagebody %}
+	<form id='form' method='post' action=''>{% csrf_token %}
+		<table>{{form}}</table>
+		<p><input type='submit' value='Registrar' /></p>
+	</form>
+{% endblock %}

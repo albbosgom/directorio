@@ -5,13 +5,50 @@ from mainapp.forms import WebForm
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 from selenium import webdriver
 import os
 
 RUTA_PROYECTO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Helper method to avoid repetitive template code
+def my_render(request, template, **kwargs):
+    return render_to_response(template, kwargs, context_instance=RequestContext(request))
+
 def home(request):
-    return render_to_response('home.html')
+    return my_render(request, 'home.html')
+
+def appLogin(request):
+    if request.method=='POST':
+        form = AuthenticationForm(request.POST)
+        if form.is_valid:
+            username = request.POST['username']
+            password = request.POST['password']
+            access = authenticate(username=username, password=password)
+            if access is not None:
+                if access.is_active:
+                    login(request, access)
+                    return HttpResponseRedirect('/')
+    else:
+        form = AuthenticationForm()
+    return my_render(request, 'login.html', form=form)
+
+def appLogout(request):
+    logout(request)
+    return HttpResponseRedirect('/')
+
+def appRegistro(request):
+    if request.method=='POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid:
+            form.save()
+            return HttpResponseRedirect('/')
+    else:
+        form = UserCreationForm()
+    return my_render(request, 'registro.html', form=form)
 
 def allPages(request):
     webpage_list = Webpage.objects.all()
@@ -32,7 +69,7 @@ def allPages(request):
         browser.get(webpage.enlace)
         capturas.append((browser.get_screenshot_as_base64()))
     browser.quit()    
-    return render_to_response('webpage.html', {'list':webpages, 'capturas':capturas})
+    return my_render(request, 'webpage.html', list=webpages)
 
 def nuevaWeb(request):
     if request.method == 'POST':
@@ -42,5 +79,4 @@ def nuevaWeb(request):
             return HttpResponseRedirect('/')
     else:
         formulario = WebForm()
-    return render_to_response('webform.html', {'formulario':formulario}, context_instance= RequestContext(request))
-        
+    return my_render(request, 'webform.html', formulario=formulario)
