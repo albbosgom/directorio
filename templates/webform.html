@@ -7,7 +7,9 @@
 	<form id='formulario' method='post' enctype='multipart/form-data' action=''>{% csrf_token %}
 	
 		{{formulario.as_p}}
-		
+		<div>
+		<button id ="recomendacion" data-catid="{{category.id}}" class="btn btn-mini btn-primary" type="button">Añadir categorías recomendadas</button>
+		</div>
 		<p><input type='submit' value='Añadir'/></p>
 	</form>
 {% endblock %}

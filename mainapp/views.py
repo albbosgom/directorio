@@ -2,7 +2,7 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from mainapp.models import Webpage, WebpageCategoria, WebpageCategoriaPuntuacion, Categoria
 from mainapp.forms import WebForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
@@ -10,6 +10,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from selenium import webdriver
+from pattern.vector import Document
+import urllib2
 import os
 
 RUTA_PROYECTO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -73,6 +75,21 @@ def nuevaWeb(request):
     else:
         formulario = WebForm()
     return my_render(request, 'webform.html', formulario=formulario)
+
+def like_category(request):
+    context = RequestContext(request)
+    cat_id = None
+    if request.method == 'GET':
+        cat_id = request.GET['category_id']
+    
+    url = urllib2.urlopen(cat_id).read()
+    d = Document(url, threshold = 1)
+    keywords = d.keywords(top=5)
+    likes = ""
+    for keyword in keywords:
+        likes +='<span class="tag"><span>'+keyword[1]+'</span><a href="#" title="Removing tag">x</a></span>'
+    print likes
+    return HttpResponse(likes)
 
 def verWeb(request, webpage_id):
     webpage = get_object_or_404(Webpage, pk=webpage_id)

@@ -15,7 +15,7 @@ urlpatterns = patterns('',
     url(r'^directorio/(?P<webpage_id>\d+)/etiquetas/(?P<categoria_id>\d+)/no/$', 'mainapp.views.tagVote_VoteNo', name='tagVote_VoteNo'),
     url(r'^directorio/(?P<webpage_id>\d+)/etiquetas/(?P<categoria_id>\d+)/del/$', 'mainapp.views.tagVote_VoteDel', name='tagVote_VoteDel'),
     url(r'^tags_input/', include('tags_input.urls', namespace='tags_input')),
-    
+    url(r'^like_category/$', 'mainapp.views.like_category', name='like_category'),
     url(r'^login/$', 'mainapp.views.appLogin'),
     url(r'^logout/$', 'mainapp.views.appLogout'),
     url(r'^registro/$', 'mainapp.views.appRegistro'),
