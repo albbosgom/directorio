@@ -28,6 +28,7 @@ class Categoria(ReprModel):
 class Webpage(ReprModel):
     titulo = models.CharField(max_length=100)
     enlace = models.URLField()
+    usuario = models.ForeignKey(User)
     categoria = models.ManyToManyField(Categoria, through='WebpageCategoria_M2M')
     def __unicode__(self):
         return self.titulo

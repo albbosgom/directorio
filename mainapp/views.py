@@ -64,11 +64,15 @@ def allPages(request):
         webpages = paginator.page(paginator.num_pages)
     return my_render(request, 'webpage.html', list=webpages)
 
+@login_required
 def nuevaWeb(request):
     if request.method == 'POST':
         formulario = WebForm(request.POST, request.FILES)
         if formulario.is_valid():
-            formulario.save()
+            web = formulario.save(commit=False)
+            web.usuario = request.user
+            web.save()
+            formulario.save_m2m()
             return HttpResponseRedirect('/')
     else:
         formulario = WebForm()
