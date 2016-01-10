@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
+
 {% block pagetitle %}Añadir web al directorio{% endblock %}
 {% block pageheader %} 
 	<h1>Nueva web</h1>
@@ -6,10 +8,14 @@
 {% block pagebody %}
 	<form id='formulario' method='post' enctype='multipart/form-data' action=''>{% csrf_token %}
 	
-		{{formulario.as_p}}
-		<div>
-		<button id ="recomendacion" data-catid="{{category.id}}" class="btn btn-mini btn-primary" type="button">Añadir categorías recomendadas</button>
-		</div>
-		<p><input type='submit' value='Añadir'/></p>
+	    {% bootstrap_form formulario%}
+	      {% buttons %}
+	      <button type="submit" class="btn btn-primary">
+    	  {% bootstrap_icon "star" %} Añadir web
+  		  </button>
+	      <button id ="recomendacion" data-catid="{{category.id}}" class="btn btn-mini btn-primary" type="button">Añadir categorías recomendadas</button>
+    	  
+  		   {% endbuttons %}
+  		  
 	</form>
 {% endblock %}

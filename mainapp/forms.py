@@ -12,7 +12,7 @@ class WebForm(ModelForm):
         create_missing=True,)
     class Meta:
         model = Webpage
-        fields = ('titulo', 'enlace', 'categoria')
+        fields = ('titulo', 'enlace', 'descripcion', 'categoria')
         widgets = {
             'categoria': widgets.TagsInputWidget
         }
