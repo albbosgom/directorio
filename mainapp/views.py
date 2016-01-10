@@ -11,6 +11,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from selenium import webdriver
 from pattern.vector import Document
+from pattern.web import plaintext
 import urllib2
 import os
 
@@ -87,12 +88,14 @@ def like_category(request):
         cat_id = request.GET['category_id']
     
     url = urllib2.urlopen(cat_id).read()
-    d = Document(url, threshold = 1)
+    d = Document(plaintext(url),language="es",  stopwords = False)
     keywords = d.keywords(top=5)
     likes = ""
     for keyword in keywords:
-        likes +='<span class="tag"><span>'+keyword[1]+'</span><a href="#" title="Removing tag">x</a></span>'
-    print likes
+        likes+=keyword[1]+","
+    #    likes +='<span class="tag"><span>'+keyword[1]+'&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>'
+    #likes+='<div id="id_categoria_tags_input_addTag"><input name="categoria_incomplete" id="id_categoria_tags_input_tag" value="" data-default="add a tag" style="color: rgb(0, 0, 0); width: 145px;" class="ui-autocomplete-input" autocomplete="off"><input name="categoria_default" type="hidden" value="add a tag"></div><div class="tags_clear"></div></div>'
+    #likes+='<ul class="ui-autocomplete ui-front ui-menu ui-widget ui-widget-content" id="ui-id-1" tabindex="0" style="display: none; width: 145px; top: 602px; left: 42.5px;"><li class="ui-menu-item" id="ui-id-2" tabindex="-1">test</li></ul><span role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"><div style="display: none;">test</div><div style="display: none;">1 result is available, use up and down arrow keys to navigate.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div>No search results.</div></span>'
     return HttpResponse(likes)
 
 def verWeb(request, webpage_id):
