@@ -38,7 +38,9 @@
 				<ul class="nav navbar-nav">
 					<li><a href="/">Inicio</a></li>
 					<li><a href="/directorio">Directorio</a></li>
-					<li><a href="/directorio/nuevo">Añadir al directorio</a></li>
+					{% if user.is_authenticated %}
+					<li><a href="/directorio/nuevo"><span class="glyphicon glyphicon-plus"></span> A&ntilde;adir nueva web</a></li>
+					{% endif %}
 				</ul>
 				
 				<ul class="nav navbar-nav navbar-right">
