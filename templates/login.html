@@ -1,11 +1,16 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
 {% block pagetitle %} Entrar en el sistema {% endblock %}
 {% block pageheader %}
 	<h1>Entrar en el sistema</h1>
 {% endblock %}
 {% block pagebody %}
 	<form id='form' method='post' action=''>{% csrf_token %}
-		<table>{{form}}</table>
-		<p><input type='submit' value='Entrar' /></p>
+		{% bootstrap_form form %}
+		{% buttons %}
+		<button type="submit" class="btn btn-primary">
+		{% bootstrap_icon "log-in" %} Entrar
+		</button>
+		{% endbuttons %}
 	</form>
 {% endblock %}

@@ -3,7 +3,8 @@
 {% block pagetitle %} Inicio {% endblock %} 
 {% block pageheader %}
 <h1>Todas las webs</h1> {% endblock %} 
-{% block pagebody %} 
+{% block pagebody %}
+{% load bootstrap3 %}
 
 <table class="table table-striped">
     <thead>
@@ -22,21 +23,6 @@
 {% endfor %}
 </table>
 
-
-<div class="pagination">
-    <span class="step-links">
-        {% if list.has_previous %}
-            <a href="?page={{ list.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ list.number }} of {{ list.paginator.num_pages }}.
-        </span>
-
-        {% if list.has_next %}
-            <a href="?page={{ list.next_page_number }}">next</a>
-        {% endif %}
-    </span>
-</div>
+{% bootstrap_pagination list %}
 
 {% endblock %} 

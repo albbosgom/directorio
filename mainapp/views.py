@@ -100,7 +100,7 @@ def like_category(request):
 
 def verWeb(request, webpage_id):
     webpage = get_object_or_404(Webpage, pk=webpage_id)
-    categolist = Paginator(WebpageCategoria.objects.filter(webpage=webpage, puntuacion__gt=0).order_by('-puntuacion'), 5).page(1)
+    categolist = Paginator(WebpageCategoria.objects.filter(webpage=webpage, puntuacion__gte=0).order_by('-puntuacion'), 5).page(1)
     browser = webdriver.PhantomJS(executable_path=RUTA_PROYECTO+'\phantomjs.exe')
     browser.set_window_size(800, 600)
     browser.get(webpage.enlace)

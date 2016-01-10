@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>{% block pagetitle %}{% endblock %} - Directorio de webs</title>
 	{% load staticfiles %}
+	{% load bootstrap3 %}
 	<link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
 	<link rel="stylesheet" href="{% static "css/bootstrap-theme.min.css" %}">
 	<link rel="stylesheet" href="{% static "css/jquery.tagsinput.css" %}">
@@ -16,8 +17,6 @@
 	<script type="text/javascript" src="{% static "js/jquery-ui.1.11.4.min.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/jquery.tagsinput.js" %}"></script>
 	<script src="{% static "js/directorio-ajax.js" %}"></script>
-	
-
 	<script src="{% static "js/bootstrap.min.js" %}"></script>
 </head>
 <body>
@@ -39,7 +38,7 @@
 					<li><a href="/">Inicio</a></li>
 					<li><a href="/directorio">Directorio</a></li>
 					{% if user.is_authenticated %}
-					<li><a href="/directorio/nuevo"><span class="glyphicon glyphicon-plus"></span> A&ntilde;adir nueva web</a></li>
+					<li><a href="/directorio/nuevo">{% bootstrap_icon "plus" %} A&ntilde;adir nueva web</a></li>
 					{% endif %}
 				</ul>
 				
@@ -47,15 +46,15 @@
 				{% if user.is_authenticated %}
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-							<span class="glyphicon glyphicon-user"></span> {{user.username}} <span class="caret"></span>
+							{% bootstrap_icon "user" %} {{user.username}} <span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
+							<li><a href="/logout">{% bootstrap_icon "log-out" %} Salir</a></li>
 						</ul>
 					</li>
 				{% else %}
-					<li><a href="/registro"><span class="glyphicon glyphicon-pencil"></span> Registrarse</a></li>
-					<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Entrar</a></li>
+					<li><a href="/registro">{% bootstrap_icon "pencil" %} Registrarse</a></li>
+					<li><a href="/login">{% bootstrap_icon "log-in" %} Entrar</a></li>
 				{% endif %}
 				</ul>
 			</div>

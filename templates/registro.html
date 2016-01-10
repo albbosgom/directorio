@@ -1,11 +1,16 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
 {% block pagetitle %} Registro {% endblock %}
 {% block pageheader %}
 	<h1>Registro</h1>
 {% endblock %}
 {% block pagebody %}
 	<form id='form' method='post' action=''>{% csrf_token %}
-		<table>{{form}}</table>
-		<p><input type='submit' value='Registrar' /></p>
+		{% bootstrap_form form %}
+		{% buttons %}
+		<button type="submit" class="btn btn-primary">
+		{% bootstrap_icon "pencil" %} Registrarse
+		</button>
+		{% endbuttons %}
 	</form>
 {% endblock %}

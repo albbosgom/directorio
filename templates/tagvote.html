@@ -5,6 +5,7 @@
 <h1>Votando etiquetas - {{webpage.titulo}}</h1> {% endblock %} 
 {% block pagebody %}
 {% load access %}
+{% load bootstrap3 %}
 
 <table class="table table-striped">
 <thead>
@@ -22,8 +23,8 @@
 		{% with votes|access:catpk as vote %}
 			{% if vote == None %}
 				<div class="btn-group" role="group">
-					<a href="/directorio/{{pk}}/etiquetas/{{catpk}}/yes" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-thumbs-up"></span> Apropiada</a>
-					<a href="/directorio/{{pk}}/etiquetas/{{catpk}}/no" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-thumbs-down"></span> Inapropiada</a>
+					<a href="/directorio/{{pk}}/etiquetas/{{catpk}}/yes" class="btn btn-xs btn-success">{% bootstrap_icon "thumbs-up" %} Apropiada</a>
+					<a href="/directorio/{{pk}}/etiquetas/{{catpk}}/no" class="btn btn-xs btn-danger">{% bootstrap_icon "thumbs-down" %} Inapropiada</a>
 				</div>
 			{% else %}
 				{% if vote > 0 %}
@@ -31,7 +32,7 @@
 				{% else %}
 					<span class="label label-danger">Inapropiada</span>
 				{% endif %}
-				<a href="/directorio/{{pk}}/etiquetas/{{catpk}}/del" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-remove"></span> Borrar voto</a>
+				<a href="/directorio/{{pk}}/etiquetas/{{catpk}}/del" class="btn btn-xs btn-primary">{% bootstrap_icon "remove" %} Borrar voto</a>
 			{% endif %}
 		{% endwith %}
 		{% endwith %}

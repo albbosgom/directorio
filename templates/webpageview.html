@@ -3,18 +3,27 @@
 {% block pagetitle %} {{webpage.titulo}} {% endblock %} 
 {% block pageheader %}
 <h1>{{webpage.titulo}}</h1> {% endblock %} 
-{% block pagebody %} 
+{% block pagebody %}
+{% load bootstrap3 %}
 
-<p><a href="{{webpage.enlace}}">{{webpage.titulo}}</a></p>
-<p>Etiquetas:
-{% for elemento in categolist %}
-<span class="label label-success">{{elemento.categoria.nombre}} <span class="badge">{{elemento.puntuacion}}</span></span>
-{% endfor %}
-{% if user.is_authenticated %}
-<a class="btn btn-xs btn-primary" role="button" href="/directorio/{{pk}}/etiquetas"><span class="glyphicon glyphicon-hand-up"></span> Votar</a>
-{% endif %}
-</p>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title">{{webpage.titulo}}</h3>
+	</div>
+	<div class="panel-body">
+		<p><a href="{{webpage.enlace}}">{{webpage.enlace}}</a></p>
+		<p>{{webpage.descripcion}}</p>
+	</div>
+	<div class="panel-footer">
+		{% for elemento in categolist %}
+		<span class="label label-success">{{elemento.categoria.nombre}} <span class="badge">{{elemento.puntuacion}}</span></span>
+		{% endfor %}
+		{% if user.is_authenticated %}
+		<a class="btn btn-xs btn-primary" role="button" href="/directorio/{{pk}}/etiquetas">{% bootstrap_icon "hand-up" %} Votar</a>
+		{% endif %}
+	</div>
+</div>
+
 <p><img alt="Embedded Image" src="data:image/png;base64,{{captura}}" /></p>
-</p>
 
 {% endblock %}
