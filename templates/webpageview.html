@@ -24,6 +24,13 @@
 	</div>
 </div>
 
+<p>Webs relacionadas:</p>
+<ul>
+{% for elemento in related %}
+<li><a href="/directorio/{{elemento.1.pk}}/">{{elemento.1.titulo}}</a> (similitud= {{elemento.0}})</li>
+{% endfor %}
+</ul>
+
 <p><img alt="Embedded Image" src="data:image/png;base64,{{captura}}" /></p>
 
 {% endblock %}

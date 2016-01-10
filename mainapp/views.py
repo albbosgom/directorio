@@ -82,7 +82,6 @@ def nuevaWeb(request):
     return my_render(request, 'webform.html', formulario=formulario)
 
 def like_category(request):
-    context = RequestContext(request)
     cat_id = None
     if request.method == 'GET':
         cat_id = request.GET['category_id']
@@ -93,10 +92,81 @@ def like_category(request):
     likes = ""
     for keyword in keywords:
         likes+=keyword[1]+","
-    #    likes +='<span class="tag"><span>'+keyword[1]+'&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>'
-    #likes+='<div id="id_categoria_tags_input_addTag"><input name="categoria_incomplete" id="id_categoria_tags_input_tag" value="" data-default="add a tag" style="color: rgb(0, 0, 0); width: 145px;" class="ui-autocomplete-input" autocomplete="off"><input name="categoria_default" type="hidden" value="add a tag"></div><div class="tags_clear"></div></div>'
-    #likes+='<ul class="ui-autocomplete ui-front ui-menu ui-widget ui-widget-content" id="ui-id-1" tabindex="0" style="display: none; width: 145px; top: 602px; left: 42.5px;"><li class="ui-menu-item" id="ui-id-2" tabindex="-1">test</li></ul><span role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"><div style="display: none;">test</div><div style="display: none;">1 result is available, use up and down arrow keys to navigate.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div style="display: none;">No search results.</div><div>No search results.</div></span>'
     return HttpResponse(likes)
+
+def parametros_normalizacion(web):
+    """
+    Esta función calcula los parámetros de normalización de las puntuaciones de las categorías de una web
+    para trasladarlas al rango 0..5.
+    """
+    from django.db import models
+    r = WebpageCategoria.objects.filter(webpage=web).aggregate(models.Min('puntuacion'), models.Max('puntuacion'), models.Avg('puntuacion'))
+    rmin,rmax,ravg = r['puntuacion__min'],r['puntuacion__max'],r['puntuacion__avg']
+    ret = {'bias':-rmin, 'scale':5.0/(rmax-rmin)}
+    ret['mean'] = (ravg+ret['bias'])*ret['scale']
+    return ret
+
+def normaliza(param, val):
+    """Esta función normaliza la puntuación de una categoría al rango 0..5 y resta la media de las puntuaciones."""
+    return (val+param['bias'])*param['scale']-param['mean']
+
+def calcula_similitud(web1, web2, categorias):
+    """
+    Esta función calcula el coeficiente de similitud de Pearson de dos webs.
+    """
+    from math import sqrt
+    norm1,norm2 = parametros_normalizacion(web1),parametros_normalizacion(web2)
+    numera,denomina_a,denomina_b = 0,0,0
+    for cat in categorias:
+        s1 = normaliza(norm1, WebpageCategoria.objects.get(webpage=web1,categoria=cat).puntuacion)
+        s2 = normaliza(norm2, WebpageCategoria.objects.get(webpage=web2,categoria=cat).puntuacion)
+        numera += s1*s2
+        denomina_a += s1*s1
+        denomina_b += s2*s2
+    return numera / sqrt(denomina_a*denomina_b)
+
+def calcula_corrector(web1, web2, categorias):
+    """
+    Esta función calcula el coeficiente de corrección de una web, que es el número de categorías con puntuación
+    igual o superior a cero comunes a las dos webs.
+    """
+    nCatBuenas = WebpageCategoria.objects.filter(categoria__in=categorias,webpage__in=[web1,web2],puntuacion__gte=0).count()
+    return float(nCatBuenas+1)
+
+def calcula_coef(d,max_corrector):
+    """
+    Esta función corrige el coeficiente de similaridad utilizando el coeficiente corrector.
+    Se emplea la raíz cuadrada para suavizar el efecto del corrector en webs con número de
+    categorías apropiadas comunes similares.
+    """
+    from math import sqrt
+    fcorr = sqrt(d['corr']/max_corrector)
+    return d['sim']*fcorr
+
+def calculaProximos(webpage,N=5):
+    webs = []
+    max_corrector = 0
+    for obj in Webpage.objects.all():
+        if obj==webpage:
+            continue
+        # Calcular las categorías comunes con la web actual
+        cate = Categoria.objects.filter(webpage=webpage).filter(webpage=obj)
+        if not cate: # Ignorar la web si no hay categorías comunes
+            continue
+        # Calcular el coeficiente de similaridad y el de corrección
+        similitud,corrector = calcula_similitud(webpage, obj, cate),calcula_corrector(webpage, obj, cate)
+        max_corrector = max(max_corrector, corrector)
+        # Añadir web a la lista de webs
+        webs.append({"web":obj, "sim":similitud, "corr":corrector})
+    # Si el coeficiente de corrección máximo es cero, significa que ninguna categoría común con otras webs describe bien a la web
+    if max_corrector==0:
+        return []
+    # Calcular el coeficiente de similaridad final utilizando el factor corrector
+    for d in webs:
+        d['coef'] = calcula_coef(d, max_corrector)
+    # Devolver las N webs con coeficiente mayor
+    webs = sorted(webs, key=lambda k:k['coef'], reverse=True)
+    return [(a['coef'],a['web']) for a in webs[0:N]]
 
 def verWeb(request, webpage_id):
     webpage = get_object_or_404(Webpage, pk=webpage_id)
@@ -106,7 +176,8 @@ def verWeb(request, webpage_id):
     browser.get(webpage.enlace)
     captura = browser.get_screenshot_as_base64()
     browser.quit()
-    return my_render(request, 'webpageview.html', webpage=webpage, captura=captura, categolist=categolist, pk=webpage_id)
+    related = calculaProximos(webpage)
+    return my_render(request, 'webpageview.html', webpage=webpage, captura=captura, categolist=categolist, related=related, pk=webpage_id)
 
 @login_required
 def tagVote_List(request, webpage_id):
