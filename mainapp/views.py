@@ -1,3 +1,4 @@
+#encoding:utf-8
 # Create your views here.
 from django.shortcuts import render_to_response, get_object_or_404
 from mainapp.models import Webpage, WebpageCategoria, WebpageCategoriaPuntuacion, Categoria
@@ -96,23 +97,25 @@ def like_category(request):
 
 def parametros_normalizacion(web):
     """
-    Esta funci髇 calcula los par醡etros de normalizaci髇 de las puntuaciones de las categor韆s de una web
+    Esta funci贸n calcula los par谩metros de normalizaci贸n de las puntuaciones de las categor铆as de una web
     para trasladarlas al rango 0..5.
     """
     from django.db import models
     r = WebpageCategoria.objects.filter(webpage=web).aggregate(models.Min('puntuacion'), models.Max('puntuacion'), models.Avg('puntuacion'))
     rmin,rmax,ravg = r['puntuacion__min'],r['puntuacion__max'],r['puntuacion__avg']
+    if (rmax-rmin)==0:
+        return {'bias': 0, 'scale': 0, 'mean': 0}
     ret = {'bias':-rmin, 'scale':5.0/(rmax-rmin)}
     ret['mean'] = (ravg+ret['bias'])*ret['scale']
     return ret
 
 def normaliza(param, val):
-    """Esta funci髇 normaliza la puntuaci髇 de una categor韆 al rango 0..5 y resta la media de las puntuaciones."""
+    """Esta funci贸n normaliza la puntuaci贸n de una categor铆a al rango 0..5 y resta la media de las puntuaciones."""
     return (val+param['bias'])*param['scale']-param['mean']
 
 def calcula_similitud(web1, web2, categorias):
     """
-    Esta funci髇 calcula el coeficiente de similitud de Pearson de dos webs.
+    Esta funci贸n calcula el coeficiente de similitud de Pearson de dos webs.
     """
     from math import sqrt
     norm1,norm2 = parametros_normalizacion(web1),parametros_normalizacion(web2)
@@ -123,11 +126,13 @@ def calcula_similitud(web1, web2, categorias):
         numera += s1*s2
         denomina_a += s1*s1
         denomina_b += s2*s2
+    if denomina_a==0 or denomina_b==0:
+        return 0
     return numera / sqrt(denomina_a*denomina_b)
 
 def calcula_corrector(web1, web2, categorias):
     """
-    Esta funci髇 calcula el coeficiente de correcci髇 de una web, que es el n鷐ero de categor韆s con puntuaci髇
+    Esta funci贸n calcula el coeficiente de correcci贸n de una web, que es el n煤mero de categor铆as con puntuaci贸n
     igual o superior a cero comunes a las dos webs.
     """
     nCatBuenas = WebpageCategoria.objects.filter(categoria__in=categorias,webpage__in=[web1,web2],puntuacion__gte=0).count()
@@ -135,9 +140,9 @@ def calcula_corrector(web1, web2, categorias):
 
 def calcula_coef(d,max_corrector):
     """
-    Esta funci髇 corrige el coeficiente de similaridad utilizando el coeficiente corrector.
-    Se emplea la ra韟 cuadrada para suavizar el efecto del corrector en webs con n鷐ero de
-    categor韆s apropiadas comunes similares.
+    Esta funci贸n corrige el coeficiente de similaridad utilizando el coeficiente corrector.
+    Se emplea la ra铆z cuadrada para suavizar el efecto del corrector en webs con n煤mero de
+    categor铆as apropiadas comunes similares.
     """
     from math import sqrt
     fcorr = sqrt(d['corr']/max_corrector)
@@ -149,16 +154,16 @@ def calculaProximos(webpage,N=5):
     for obj in Webpage.objects.all():
         if obj==webpage:
             continue
-        # Calcular las categor韆s comunes con la web actual
+        # Calcular las categor铆as comunes con la web actual
         cate = Categoria.objects.filter(webpage=webpage).filter(webpage=obj)
-        if not cate: # Ignorar la web si no hay categor韆s comunes
+        if not cate: # Ignorar la web si no hay categor铆as comunes
             continue
-        # Calcular el coeficiente de similaridad y el de correcci髇
+        # Calcular el coeficiente de similaridad y el de correcci贸n
         similitud,corrector = calcula_similitud(webpage, obj, cate),calcula_corrector(webpage, obj, cate)
         max_corrector = max(max_corrector, corrector)
-        # A馻dir web a la lista de webs
+        # A帽adir web a la lista de webs
         webs.append({"web":obj, "sim":similitud, "corr":corrector})
-    # Si el coeficiente de correcci髇 m醲imo es cero, significa que ninguna categor韆 com鷑 con otras webs describe bien a la web
+    # Si el coeficiente de correcci贸n m谩ximo es cero, significa que ninguna categor铆a com煤n con otras webs describe bien a la web
     if max_corrector==0:
         return []
     # Calcular el coeficiente de similaridad final utilizando el factor corrector
