@@ -38,7 +38,7 @@ def crearArchivoTags():
         else:
             f3.write(cate + '\n')
     f3.close()
-#crearArchivoTags()
+crearArchivoTags()
 
 def extracInformacion():
     for cate in all_category:
@@ -48,7 +48,7 @@ def extracInformacion():
         f2.writelines(f)
         f.close()
     f2.close()     
-#extracInformacion()
+extracInformacion()
 
 def scrapInformacion():
     for cate in all_category:
@@ -69,6 +69,7 @@ def scrapInformacion():
         for title in split_web.find_all('a', target="_blank"):
             title = title.get_text()
             title = title = unicodedata.normalize('NFD', title).encode('ascii', 'ignore')
+            title = title.replace(":"," ->")
             titulos.append(title)
         print len(titulos)
         
@@ -89,6 +90,7 @@ def scrapInformacion():
                 word = word.replace("\r",". ")
                 word = word.replace("  "," ")
                 word = word.replace(".",". ")
+                word = word.replace(":"," ->")
                 descripcion.append(word)
             i +=1
         print len(descripcion)
@@ -98,15 +100,15 @@ def scrapInformacion():
         cate = cate.replace("-"," ")
         for i in range(len(titulos)):
             if i == 0:
-                f3.write('\n'+titulos[i]+'||'+enlaces[i]+'||'+descripcion[i]+'||'+cate+ '\n')
+                f3.write('\n'+titulos[i]+'$$'+enlaces[i]+'$$'+descripcion[i]+'$$'+cate+ '\n')
             elif (cate == all_category[-1]) and (i==9):
-                f3.write(titulos[i]+'||'+enlaces[i]+'||'+descripcion[i]+'||'+cate)
+                f3.write(titulos[i]+'$$'+enlaces[i]+'$$'+descripcion[i]+'$$'+cate)
             else:
-                f3.write(titulos[i]+'||'+enlaces[i]+'||'+descripcion[i]+'||'+cate+ '\n')
+                f3.write(titulos[i]+'$$'+enlaces[i]+'$$'+descripcion[i]+'$$'+cate+ '\n')
     f2.close()    
     f3.close()            
         
-#scrapInformacion()
+scrapInformacion()
 
 def quitarLineasEnBlanco():
     f3 = open("u'itemsAux", "r")
@@ -116,7 +118,7 @@ def quitarLineasEnBlanco():
             f4.write(line)
     f3.close()
     f4.close()
-#quitarLineasEnBlanco()
+quitarLineasEnBlanco()
 
 
 def Yaml(lineaweb,categoria,id,i,ac):
@@ -169,7 +171,7 @@ def crearYaml():
     relacion = {}
     f = open("u'items", "r")
     for line in f.readlines():
-        line = line.strip().split('||')
+        line = line.strip().split('$$')
         cate = line[3]
         if relacion.get(cate) == None:
             acu +=1
