@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	        <meta name="description" content="IMAGENES GOOGLE - Categoría que cuenta con muchas páginas web que ofrecen muchas imagenes graciosas, de amor, para facebook, desmotivaciones, entre otras." />
+                <meta name="keywords" content="Directorio Google, google directorio, alta en buscadores, alta en google, google wordl, directorio de enlaces, directorio web, intercambio de enlaces, enlaces gratis, enlaces gratuitos, enlaces sin reciproco, directorio de blogs, directorio de paginas, blogger, wordpress">
+	<link rel="stylesheet" type="text/css" href="/templates/b/estilos.css" media="screen" />
+		<title>GOOGLE DIRECTORIO - Directorio Web y Blog - Directorio Google - Imagenes</title>
+       <script type="text/javascript">
+        
+         var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-27759655-1']); 
+         _gaq.push(['_trackPageview']);
+
+         (function() {
+           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+        
+        </script>
+</head>
+<body><div id="header">
+    <div class="logo">
+        <a href="http://www.googledirectorio.com"><img src="http://www.googledirectorio.com/templates/b/images/logogoogledirectorio.png" alt="Directorio Google" title="Directorio Google"/></a>
+    <br>
+	<span>Directorio de sitios web sin fines de lucro. Este sitio no guarda relaci&#243n con la empresa Google Inc.</span>
+	</div>
+	
+    
+    
+	<div class="tenor">
+        <span>Aparecer en Google - Alta en Google - Alta en buscadores, Directorio Google - Google Directorio - Directorio Web</span>
+    </div>
+    <div class="addweb">
+        <a href="/agregar.php">Agrega Tu Web</a>
+    </div>
+    <div class="inicio">
+        <a class="current" href="http://www.googledirectorio.com/">
+            <img src="/templates/b/images/botoninicio.gif" width="46" height="29" />
+        </a>
+    </div>
+    <div class="search">
+        <form method="get" action="/search.php">
+            <label>Buscar en post:</label><input type="text" name="s" id="search" /><input name="buscar" type="submit" class="submit" value="Buscar" />
+        </form>
+    </div>
+</div><div id="content"><div id="main2" class="margin30L margin30R"><h1>&nbsp;Imagenes</h1><div class="post"><h2><a  target="_blank" href="http://www.tusimagenesbonitas.com">Imágenes Bonitas</a></h2>
+<p class="subti">
+<img src="http://www.bitpixels.com/getthumbnail?code=86761&size=120&url=http://www.tusimagenesbonitas.com" border="1" style="width:110px; height:82px;" onload="if( this.width&gt;50) this.border=1; this.alt='Imágenes Bonitas';" alt="Imágenes Bonitas" align="left" class="img1">
+Publicado en Imágenes Bonitas</p>
+<p>Las mejores imágenes bonitas para descargar gratis en tu celular: imágenes bonitas con frases, imagenes bonitas de amistad, frases bonitas de amor y más.</p></div><div class="post"><h2><a  target="_blank" href="http://imagenesdeamorunicas.com">Imagenes de amor</a></h2>
+<p class="subti">
+<img src="http://www.bitpixels.com/getthumbnail?code=86761&size=120&url=http://imagenesdeamorunicas.com" border="1" style="width:110px; height:82px;" onload="if( this.width&gt;50) this.border=1; this.alt='Imagenes de amor';" alt="Imagenes de amor" align="left" class="img1">
+Publicado en Imagenes de amor</p>
+<p>Lindas imagenes de amor para dedicar, imagenes bonitas para compartir; así como imagenes para facebook. En un solo lugar!</p></div><div class="clear"></div></div></div><div id="div-footer">
+
+	<div id="footer">
+    
+    	<div class="links_recomendados">
+       	  <h3>GoogleDirectorio.Com</h3>
+            <ul class="links">
+            	<li><a href="">Google Directorio</a></li>
+             	<li><a href="/contact.php">Contacto</a></li>
+                <li><a href="/agregar.php">Agrega tu blog</a></li>
+				<li>Search thousands of royalty-free <a href="http://www.freestockphotos.name/">stock photography</a>, illustrations and vectors.</li>
+				
+				
+            </ul>
+            <div class="clear"></div>
+        </div>	
+        
+
+        
+       <div class="terminos">
+
+<div class="Legal" style="padding-right: 530px; height: 0px; width: 470px;">Dejamos en claro que GoogleDirectorio.com no tiene ninguna relación con la empresa Google Inc.</div>
+   GoogleDirectorio &copy; 2011  |  <a href="/politica-privacidad.php">Politicas de privacidad</a></div>
+        
+    </div>
+    
+    <div class="clear"></div>
+    
+</div>
+</body>
+</html>
