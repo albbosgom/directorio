@@ -218,9 +218,10 @@ def tagVote_VoteDel(request, webpage_id, categoria_id):
     o.delete()
     return HttpResponseRedirect('/directorio/%s/etiquetas/' % (webpage_id,))
 
-
 def lista_webs(request,categorias):
-    webpage_list = Webpage.objects.filter(categoria = categorias)
+    webpage_list = Webpage.objects
+    for categoria in categorias:
+        webpage_list = webpage_list.filter(categoria=categoria)
     paginator = Paginator(webpage_list, 10)
     page = request.GET.get('page')
     try:
@@ -237,12 +238,11 @@ def BuscadorWebsPorCategoria(request):
     if request.method=='POST':
         formulario = CategoriasForm(request.POST)
         if formulario.is_valid():
-            #print formulario.cleaned_data
-            categorias = Categoria.objects.filter(nombre = formulario.cleaned_data['categoria'])
-            #print categorias 
-            return lista_webs(request,categorias)
+            nombrecat = formulario.cleaned_data['categoria']
+            nombrecat = [a.strip() for a in nombrecat.split(',')]
+            categorias = Categoria.objects.filter(nombre__in = nombrecat)
+            if categorias:
+                return lista_webs(request,categorias)
     else:
         formulario = CategoriasForm()
     return my_render(request,'searchWebsForm.html', formulario=formulario)
-
-    

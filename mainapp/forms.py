@@ -18,5 +18,5 @@ class WebForm(ModelForm):
         }
         
 class CategoriasForm(forms.Form):
-    categoria = forms.CharField(label="Introduce las categoria:")
+    categoria = forms.CharField(label="Categoría",help_text="Introduzca las categorías separadas por comas")
     
