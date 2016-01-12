@@ -56,7 +56,7 @@ def appRegistro(request):
 
 def allPages(request):
     webpage_list = Webpage.objects.all()
-    paginator = Paginator(webpage_list, 2)
+    paginator = Paginator(webpage_list, 10)
     page = request.GET.get('page')
     try:
         webpages = paginator.page(page)
