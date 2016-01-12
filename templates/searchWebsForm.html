@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block pagetitle %}Añadir web al directorio{% endblock %}
+{% block pageheader %} 
+	<h1>Buscar web por categoria</h1>
+{% endblock %}
+{% block pagebody %}
+
+<div id="yolo"></div>
+	<form id='formulario' method='post' enctype='multipart/form-data' action=''>{% csrf_token %}
+	
+	    {% bootstrap_form formulario %}
+	      {% buttons %}
+	      <button type="submit" class="btn btn-primary">
+    	  {% bootstrap_icon '' %} Buscar
+  		  </button>
+  		   {% endbuttons %}
+  		  
+	</form>
+{% endblock %}

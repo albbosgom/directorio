@@ -2,7 +2,7 @@
 # Create your views here.
 from django.shortcuts import render_to_response, get_object_or_404
 from mainapp.models import Webpage, WebpageCategoria, WebpageCategoriaPuntuacion, Categoria
-from mainapp.forms import WebForm
+from mainapp.forms import WebForm, CategoriasForm
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -217,3 +217,32 @@ def tagVote_VoteDel(request, webpage_id, categoria_id):
     o = WebpageCategoriaPuntuacion.objects.get(webpage=webpage, categoria=categoria, usuario=request.user)
     o.delete()
     return HttpResponseRedirect('/directorio/%s/etiquetas/' % (webpage_id,))
+
+
+def lista_webs(request,categorias):
+    webpage_list = Webpage.objects.filter(categoria = categorias)
+    paginator = Paginator(webpage_list, 10)
+    page = request.GET.get('page')
+    try:
+        webpages = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        webpages = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        webpages = paginator.page(paginator.num_pages)
+    return my_render(request, 'webpage.html', list=webpages)
+
+def BuscadorWebsPorCategoria(request):
+    if request.method=='POST':
+        formulario = CategoriasForm(request.POST)
+        if formulario.is_valid():
+            #print formulario.cleaned_data
+            categorias = Categoria.objects.filter(nombre = formulario.cleaned_data['categoria'])
+            #print categorias 
+            return lista_webs(request,categorias)
+    else:
+        formulario = CategoriasForm()
+    return my_render(request,'searchWebsForm.html', formulario=formulario)
+
+    

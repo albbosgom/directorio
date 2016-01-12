@@ -16,3 +16,7 @@ class WebForm(ModelForm):
         widgets = {
             'categoria': widgets.TagsInputWidget
         }
+        
+class CategoriasForm(forms.Form):
+    categoria = forms.CharField(label="Introduce las categoria:")
+    
