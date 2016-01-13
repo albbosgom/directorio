@@ -2,7 +2,7 @@
 # Create your views here.
 from django.shortcuts import render_to_response, get_object_or_404
 from mainapp.models import Webpage, WebpageCategoria, WebpageCategoriaPuntuacion, Categoria
-from mainapp.forms import WebForm, CategoriasForm
+from mainapp.forms import WebForm, CategoriasForm, EtiquetaForm
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -104,7 +104,7 @@ def parametros_normalizacion(web):
     r = WebpageCategoria.objects.filter(webpage=web).aggregate(models.Min('puntuacion'), models.Max('puntuacion'), models.Avg('puntuacion'))
     rmin,rmax,ravg = r['puntuacion__min'],r['puntuacion__max'],r['puntuacion__avg']
     if (rmax-rmin)==0:
-        return {'bias': 0, 'scale': 0, 'mean': 0}
+        return {'bias': 5.0 if rmax>0 else (3.0 if rmax==0 else 0.0), 'scale': 0.0, 'mean': ravg}
     ret = {'bias':-rmin, 'scale':5.0/(rmax-rmin)}
     ret['mean'] = (ravg+ret['bias'])*ret['scale']
     return ret
@@ -187,12 +187,26 @@ def verWeb(request, webpage_id):
 @login_required
 def tagVote_List(request, webpage_id):
     webpage = get_object_or_404(Webpage, pk=webpage_id)
+    if request.method=='POST':
+        formulario = EtiquetaForm(request.POST)
+        if formulario.is_valid():
+            nombrecat = formulario.cleaned_data['etiqueta']
+            try:
+                categoria = Categoria.objects.get(nombre = nombrecat)
+            except Categoria.DoesNotExist:
+                categoria = Categoria.objects.create(nombre = nombrecat)
+                categoria.save()
+            webpage.categoria.add(categoria)
+            webpage.save()
+            formulario = EtiquetaForm()
+    else:
+        formulario = EtiquetaForm()
     taglist = WebpageCategoria.objects.filter(webpage=webpage).order_by('-puntuacion')
     votes = WebpageCategoriaPuntuacion.objects.filter(webpage=webpage,usuario=request.user)
     themap = {}
     for vote in votes:
         themap[vote.categoria.pk] = vote.puntuacion
-    return my_render(request, 'tagvote.html', webpage=webpage, list=taglist, votes=themap, pk=webpage_id)
+    return my_render(request, 'tagvote.html', webpage=webpage, list=taglist, votes=themap, pk=webpage_id, form=formulario)
 
 @login_required
 def tagVote_VoteYes(request, webpage_id, categoria_id):
