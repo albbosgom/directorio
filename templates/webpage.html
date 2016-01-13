@@ -23,6 +23,8 @@
 {% endfor %}
 </table>
 
+{% if not noPagination %}
 {% bootstrap_pagination list %}
+{% endif %}
 
 {% endblock %} 

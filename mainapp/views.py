@@ -190,13 +190,8 @@ def tagVote_List(request, webpage_id):
     if request.method=='POST':
         formulario = EtiquetaForm(request.POST)
         if formulario.is_valid():
-            nombrecat = formulario.cleaned_data['etiqueta']
-            try:
-                categoria = Categoria.objects.get(nombre = nombrecat)
-            except Categoria.DoesNotExist:
-                categoria = Categoria.objects.create(nombre = nombrecat)
-                categoria.save()
-            webpage.categoria.add(categoria)
+            categoria = formulario.cleaned_data['categoria']
+            webpage.categoria.add(*categoria)
             webpage.save()
             formulario = EtiquetaForm()
     else:
@@ -233,28 +228,16 @@ def tagVote_VoteDel(request, webpage_id, categoria_id):
     return HttpResponseRedirect('/directorio/%s/etiquetas/' % (webpage_id,))
 
 def lista_webs(request,categorias):
-    webpage_list = Webpage.objects
+    webpages = Webpage.objects
     for categoria in categorias:
-        webpage_list = webpage_list.filter(categoria=categoria)
-    paginator = Paginator(webpage_list, 10)
-    page = request.GET.get('page')
-    try:
-        webpages = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        webpages = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        webpages = paginator.page(paginator.num_pages)
-    return my_render(request, 'webpage.html', list=webpages)
+        webpages = webpages.filter(categoria=categoria)
+    return my_render(request, 'webpage.html', list=webpages, noPagination=True)
 
 def BuscadorWebsPorCategoria(request):
     if request.method=='POST':
         formulario = CategoriasForm(request.POST)
         if formulario.is_valid():
-            nombrecat = formulario.cleaned_data['categoria']
-            nombrecat = [a.strip() for a in nombrecat.split(',')]
-            categorias = Categoria.objects.filter(nombre__in = nombrecat)
+            categorias = formulario.cleaned_data['categoria']
             if categorias:
                 return lista_webs(request,categorias)
     else:
