@@ -2,13 +2,33 @@
 import urllib2
 from bs4 import BeautifulSoup
 import unicodedata
+import os
 
+print "Espere unos segundos para la creación del fichero yaml necesario para importar la base de datos"
+def setUp():
+    lstDir = os.walk("./")
+    for root, dirs,files in lstDir:
+        for fichero in files:
+            (nombreFichero, extension) = os.path.splitext(fichero)
+            if(extension != ".py" and extension != ".yaml"):
+                os.remove(nombreFichero)
+            elif(extension == ".yaml"):
+                os.remove(nombreFichero+extension)
+                
+setUp()
 
+def cleanUp():
+    lstDir = os.walk("./")
+    for root, dirs,files in lstDir:
+        for fichero in files:
+            (nombreFichero, extension) = os.path.splitext(fichero)
+            if(extension != ".py" and extension != ".yaml"):
+                os.remove(nombreFichero)
 
-#f = urllib2.urlopen("http://www.googledirectorio.com/")
-#f2 = open("webs.txt", "w")
-#f2.writelines(f)
-#f.close()
+f = urllib2.urlopen("http://www.googledirectorio.com/")
+f2 = open("webs", "w")
+f2.writelines(f)
+f.close()
 f2 = open("webs","r")
 html = f2.read()
 soup = BeautifulSoup(html, 'html.parser')
@@ -28,7 +48,7 @@ def extraerTags():
                                 all_category.append(cate)
 
 extraerTags()
-print all_category
+#print all_category
 
 def crearArchivoTags():
     f3 = open("u'tags", "w")
@@ -71,11 +91,11 @@ def scrapInformacion():
             title = title = unicodedata.normalize('NFD', title).encode('ascii', 'ignore')
             title = title.replace(":"," ->")
             titulos.append(title)
-        print len(titulos)
+        #print len(titulos)
         
         for link in split_web.find_all('a', target="_blank"):
             enlaces.append(link.get('href'))
-        print len(enlaces)
+        #print len(enlaces)
         
         
         for description in split_web.find_all('p'):
@@ -93,7 +113,7 @@ def scrapInformacion():
                 word = word.replace(":"," ->")
                 descripcion.append(word)
             i +=1
-        print len(descripcion)
+        #print len(descripcion)
         
                  
         f3 = open("u'itemsAux", "a")
@@ -120,6 +140,7 @@ def quitarLineasEnBlanco():
     f4.close()
 quitarLineasEnBlanco()
 
+f2.close()
 
 def Yaml(lineaweb,categoria,id,i,ac):
 
@@ -187,9 +208,9 @@ def crearYaml():
             
         
         i +=1
-    f.close()   
-    
+    f.close()
+    cleanUp()  
+    print "Archivo yaml creado satisfactoriamente"
 
 crearYaml()
 
-f2.close()
