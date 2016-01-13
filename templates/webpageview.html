@@ -11,6 +11,9 @@
 		<h3 class="panel-title">{{webpage.titulo}}</h3>
 	</div>
 	<div class="panel-body">
+		<div class="crop">
+			<img width="200" alt="Embedded Image" src="data:image/png;base64,{{captura}}" />
+		</div>
 		<p><a href="{{webpage.enlace}}">{{webpage.enlace}}</a></p>
 		<p>{{webpage.descripcion}}</p>
 	</div>
@@ -30,7 +33,5 @@
 <li><a href="/directorio/{{elemento.1.pk}}/">{{elemento.1.titulo}}</a> (similitud= {{elemento.0}})</li>
 {% endfor %}
 </ul>
-
-<p><img alt="Embedded Image" src="data:image/png;base64,{{captura}}" /></p>
 
 {% endblock %}
