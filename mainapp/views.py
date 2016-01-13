@@ -135,8 +135,11 @@ def calcula_corrector(web1, web2, categorias):
     Esta función calcula el coeficiente de corrección de una web, que es el número de categorías con puntuación
     igual o superior a cero comunes a las dos webs.
     """
-    nCatBuenas = WebpageCategoria.objects.filter(categoria__in=categorias,webpage__in=[web1,web2],puntuacion__gte=0).count()
-    return float(nCatBuenas+1)
+    nCatBuenas = 0
+    for cat in categorias:
+        cnt = WebpageCategoria.objects.filter(categoria=cat,webpage__in=[web1,web2],puntuacion__gte=0).count()
+        nCatBuenas += 1 if cnt==2 else 0
+    return float(nCatBuenas)
 
 def calcula_coef(d,max_corrector):
     """
@@ -145,8 +148,11 @@ def calcula_coef(d,max_corrector):
     categorías apropiadas comunes similares.
     """
     from math import sqrt
+    # Si el coeficiente de corrección máximo es cero, significa que ninguna categoría común con otras webs describe bien a la web
+    if max_corrector==0:
+        return d['sim']
     fcorr = sqrt(d['corr']/max_corrector)
-    return d['sim']*fcorr
+    return (1+d['sim'])*fcorr-1
 
 def calculaProximos(webpage,N=5):
     webs = []
@@ -163,9 +169,6 @@ def calculaProximos(webpage,N=5):
         max_corrector = max(max_corrector, corrector)
         # Añadir web a la lista de webs
         webs.append({"web":obj, "sim":similitud, "corr":corrector})
-    # Si el coeficiente de corrección máximo es cero, significa que ninguna categoría común con otras webs describe bien a la web
-    if max_corrector==0:
-        return []
     # Calcular el coeficiente de similaridad final utilizando el factor corrector
     for d in webs:
         d['coef'] = calcula_coef(d, max_corrector)
